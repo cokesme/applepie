@@ -2,7 +2,9 @@ parameters:
 - name: rust
   displayName: Rust Version
   type: string
-  default: 'nightly-2021-11-10'
+  # a version that builds with the old asm style
+  # az pipelines run --name cokesme.applepie --parameters rust=nightly-2019-07-21
+  default: 'nightly-2019-07-21'
 
 trigger:
 - master
