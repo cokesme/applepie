@@ -1,3 +1,12 @@
+parameters:
+- name: rust
+  displayName: Rust Version
+  type: string
+- name: old
+  displayName: Old asm?
+  type: boolean
+  default: true
+
 trigger:
 - master
 - releases/*
@@ -10,6 +19,9 @@ jobs:
 - job: Windows
   pool:
     vmImage: 'windows-latest'
+  variables:
+	- ${{ if eq(parameters.old, true) }}:
+      RUSTUP_TOOLCHAIN: 'nightly-2021-11-10'
   steps:
   - script: |
       mkdir "$(Build.ArtifactStagingDirectory)/bochservisor"
