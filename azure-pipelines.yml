@@ -1,0 +1,25 @@
+trigger:
+- master
+- releases/*
+
+pr:
+- master
+- releases/*
+
+jobs:
+- job: Windows
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - script: |
+      mkdir "$(Build.ArtifactStagingDirectory)/bochservisor"
+    displayName: Prep Build
+  - script: |
+      cargo build --manifest-path bochservisor/Cargo.toml --release
+    displayName: Build 
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: bochservisor 
+      targetFolder: $(Build.ArtifactStagingDirectory)\bochservisor
+  - publish: $(Build.ArtifactStagingDirectory)
+    artifact: bochservisor-x64-win
