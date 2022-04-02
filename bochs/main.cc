@@ -26,6 +26,12 @@
 #include "gui/win32dialog.h"
 #endif
 
+// Needed to build on newer sdks 
+// Like 10.0.19041.0
+#ifdef BOCHSERVISOR
+#include <WinHvPlatform.h>
+#endif
+
 #define NEED_CPU_REG_SHORTCUTS 1
 #include "cpu/cpu.h"
 #include "iodev/iodev.h"
@@ -283,8 +289,6 @@ void print_statistics_tree(bx_param_c *node, int level)
 #endif
 
 #ifdef BOCHSERVISOR
-
-#include <WinHvPlatform.h>
 
 // Big context stucture. This must stay in sync with the Rust version as this
 // is passed between FFI boundaries
