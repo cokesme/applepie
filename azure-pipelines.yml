@@ -42,6 +42,7 @@ jobs:
   steps:
   # the build tools script does need to be run even on the msft hosted machines
   - script: |
+      C:\\Windows\\System32\\bash.exe -c "sudo apt update -q -y&&sudo apt install -y make"
       call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
       python build.py
     displayName: Build 
