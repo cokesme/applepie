@@ -15,7 +15,8 @@ pr:
 - releases/*
 
 jobs:
-- job: Windows
+- job: Bochservisor
+  displayName: "Bochservisor build test"
   pool:
     vmImage: 'windows-latest'
   variables:
@@ -30,6 +31,19 @@ jobs:
   - task: CopyFiles@2
     inputs:
       sourceFolder: bochservisor 
-      targetFolder: $(Build.ArtifactStagingDirectory)\bochservisor
+      targetFolder: $(Build.ArtifactStagingDirectory)/bochservisor
   - publish: $(Build.ArtifactStagingDirectory)
     artifact: bochservisor-x64-win
+
+- job: Bochs
+  displayName: "Full bochs build" 
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  # the build tools script does need to be run even on the msft hosted machines
+  - script: |
+      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      python build.py
+    displayName: Build 
+  - publish: bochs_build/bochs.exe
+    artifact: bochs-x64-win
