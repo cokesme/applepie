@@ -25020,8 +25020,8 @@ case "$target" in
     ;;
   *-pc-windows*)
     INSTALL_TARGET='install_win32'
-    CC="cl"
-    CXX="$CC"
+    #CC="cl"
+    #CXX="$CC"
     #C_OPT="/Zi"   # for debugging
     if test "$speedup_fastcall" = 1; then
       C_OPT="/O2 /Gr"   # optimize for speed, using fastcall everywhere
@@ -25045,11 +25045,11 @@ case "$target" in
     CFP="/Tc"
     OFP="/Fo"
     MAKE=make
-    MAKELIB="lib /nologo /subsystem:console,\"5.01\" /verbose /out:\$@"
+    MAKELIB="$LIBTOOL /nologo /subsystem:console,\"5.01\" /verbose /out:\$@"
     #RMCOMMAND="-del"
     L_OPT="/debug"    # for debugging
     #L_OPT=""           # no debug info
-    LINK="link $L_OPT /nologo /subsystem:console,\"5.01\" /incremental:no /out:\$@ "
+    LINK="$LD $L_OPT /nologo /subsystem:console,\"5.01\" /incremental:no /out:\$@ "
     LINK_CONSOLE=$LINK
     EXE=".exe"
     PRIMARY_TARGET="bochs.exe"
