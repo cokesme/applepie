@@ -8,6 +8,12 @@ print("Checking that cl.exe is for x64... ", end='', flush=True)
 assert b"for x64" in subprocess.check_output(["cl.exe", "/?"], stderr=subprocess.STDOUT)
 print("ok")
 
+# TODO select the correct bash exe
+# Wsl is enabled in pipelines, but it is wsl1
+# Windows Subsystem for Linux [WSLv1]
+# https://github.com/actions/virtual-environments/blob/main/images/win/Windows2022-Readme.md
+bash = "C:\\Windows\\System32\\bash.exe"
+
 if len(sys.argv) == 2 and sys.argv[1] == "deepclean":
     # Completely clean box, including cleaning makefiles from autoconf
     if os.path.exists("bochs_build"):
@@ -22,7 +28,7 @@ elif len(sys.argv) == 2 and sys.argv[1] == "bochsclean":
 elif len(sys.argv) == 2 and sys.argv[1] == "clean":
     # Clean objects and binaries
     os.chdir("bochs_build")
-    subprocess.check_call(["bash.exe", "-c", "make all-clean"])
+    subprocess.check_call([bash, "-c", "make all-clean"])
     os.chdir("..")
     os.chdir("bochservisor")
     subprocess.check_call(["cargo", "clean"])
@@ -46,12 +52,12 @@ else:
     os.environ["LD"] = "link.exe"
     os.environ["LIBTOOL"] = "lib.exe"
     os.environ["WSLENV"]="LD/u:CXX/u:CC/u;LIBTOOL/u"
-    #subprocess.run(["bash.exe"], shell=True, env=os.environ)
+    #subprocess.run([bash], shell=True, env=os.environ)
     # If we have not configured bochs before, or if the configure script is newer
     # than the last configure, reconfigure
     if not os.path.exists("bochs_configured") or os.path.getmtime("bochs_configured") < os.path.getmtime("../bochs_config"):
         # Configure bochs
-        subprocess.check_call(["bash.exe", "../bochs_config"], env=os.environ)
+        subprocess.check_call([bash, "../bochs_config"], env=os.environ)
 
         # Create a marker indicating that bochs is configured
         with open("bochs_configured", "wb") as fd:
@@ -60,5 +66,5 @@ else:
         print("Skipping configuration as it's already up to date!")
 
     # Build bochs
-    subprocess.check_call(["bash.exe", "-c", "time make -s -j16"], env=os.environ)
+    subprocess.check_call([bash, "-c", "time make -s -j16"], env=os.environ)
     os.chdir("..")
