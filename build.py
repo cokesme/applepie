@@ -12,13 +12,6 @@ print("Checking that rustc is present and nightly... ", end='', flush=True)
 assert b"-nightly" in subprocess.check_output(["rustc.exe", "--version"], stderr=subprocess.STDOUT)
 print("ok")
 
-print("Checking for cygwin... ", end='', flush=True)
-assert os.path.exists("C:\\cygwin64\\cygwin.bat")
-print("ok")
-
-# Set up path to include cygwin
-os.environ["PATH"] += os.pathsep + "C:\\cygwin64\\bin"
-
 if len(sys.argv) == 2 and sys.argv[1] == "deepclean":
     # Completely clean box, including cleaning makefiles from autoconf
     if os.path.exists("bochs_build"):
@@ -26,10 +19,14 @@ if len(sys.argv) == 2 and sys.argv[1] == "deepclean":
     os.chdir("bochservisor")
     subprocess.check_call(["cargo", "clean"])
     os.chdir("..")
+elif len(sys.argv) == 2 and sys.argv[1] == "bochsclean":
+# Completely clean box, including cleaning makefiles from autoconf
+    if os.path.exists("bochs_build"):
+        shutil.rmtree("bochs_build")
 elif len(sys.argv) == 2 and sys.argv[1] == "clean":
     # Clean objects and binaries
     os.chdir("bochs_build")
-    subprocess.check_call(["C:\\cygwin64\\bin\\bash.exe", "-c", "make all-clean"])
+    subprocess.check_call(["bash.exe", "-c", "make all-clean"])
     os.chdir("..")
     os.chdir("bochservisor")
     subprocess.check_call(["cargo", "clean"])
@@ -51,12 +48,14 @@ else:
     os.environ["CC"] = "cl.exe"
     os.environ["CXX"] = "cl.exe"
     os.environ["LD"] = "link.exe"
-
+    os.environ["LIBTOOL"] = "lib.exe"
+    os.environ["WSLENV"]="LD/u:CXX/u:CC/u;LIBTOOL/u"
+    #subprocess.run(["bash.exe"], shell=True, env=os.environ)
     # If we have not configured bochs before, or if the configure script is newer
     # than the last configure, reconfigure
     if not os.path.exists("bochs_configured") or os.path.getmtime("bochs_configured") < os.path.getmtime("../bochs_config"):
         # Configure bochs
-        subprocess.check_call(["C:\\cygwin64\\bin\\bash.exe", "../bochs_config"])
+        subprocess.check_call(["bash.exe", "../bochs_config"], env=os.environ)
 
         # Create a marker indicating that bochs is configured
         with open("bochs_configured", "wb") as fd:
@@ -65,5 +64,5 @@ else:
         print("Skipping configuration as it's already up to date!")
 
     # Build bochs
-    subprocess.check_call(["C:\\cygwin64\\bin\\bash.exe", "-c", "time make -s -j16"])
+    subprocess.check_call(["bash.exe", "-c", "time make -s -j16"], env=os.environ)
     os.chdir("..")
