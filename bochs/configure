@@ -24605,7 +24605,7 @@ if test "$with_sdl" = yes; then
   if test "$with_win32" != yes -a "$with_wx" != yes; then
     case $target in
       *-pc-windows*)
-         RC_CMD="rc /fo"
+         RC_CMD="$RC /fo"
          EXTRA_BX_OBJS="$EXTRA_BX_OBJS win32res.o"
          ;;
       *-cygwin* | *-mingw32*)
@@ -24641,7 +24641,7 @@ if test "$with_sdl2" = yes; then
   if test "$with_win32" != yes -a "$with_wx" != yes; then
     case $target in
       *-pc-windows*)
-         RC_CMD="rc /fo"
+         RC_CMD="$RC /fo"
          EXTRA_BX_OBJS="$EXTRA_BX_OBJS win32res.o"
          ;;
       *-cygwin* | *-mingw32*)
@@ -24754,7 +24754,7 @@ if test "$with_win32" = yes; then
   case $target in
     *-pc-windows*)
        if test "$with_wx" != yes; then
-         RC_CMD="rc /fo"
+         RC_CMD="$RC /fo"
          EXTRA_BX_OBJS="$EXTRA_BX_OBJS win32res.o"
        fi
        GUI_LINK_OPTS="$GUI_LINK_OPTS \$(GUI_LINK_OPTS_WIN32_VCPP)"
