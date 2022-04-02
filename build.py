@@ -51,7 +51,8 @@ else:
     os.environ["CXX"] = "cl.exe"
     os.environ["LD"] = "link.exe"
     os.environ["LIBTOOL"] = "lib.exe"
-    os.environ["WSLENV"]="LD/u:CXX/u:CC/u:LIBTOOL/u"
+    os.environ["RC"] = "rc.exe"
+    os.environ["WSLENV"]="LD/u:CXX/u:CC/u:LIBTOOL/u:RC/u"
     #subprocess.run([bash], shell=True, env=os.environ)
     # If we have not configured bochs before, or if the configure script is newer
     # than the last configure, reconfigure
