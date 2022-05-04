@@ -8,10 +8,6 @@ print("Checking that cl.exe is for x64... ", end='', flush=True)
 assert b"for x64" in subprocess.check_output(["cl.exe", "/?"], stderr=subprocess.STDOUT)
 print("ok")
 
-print("Checking that rustc is present and nightly... ", end='', flush=True)
-assert b"-nightly" in subprocess.check_output(["rustc.exe", "--version"], stderr=subprocess.STDOUT)
-print("ok")
-
 
 # Set up path to include cygwin
 os.environ["PATH"] += os.pathsep + "C:\\cygwin64\\bin" + "C:\\msys64\\usr\\bin\\"
