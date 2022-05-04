@@ -40,10 +40,16 @@ jobs:
   pool:
     vmImage: 'windows-latest'
   steps:
-  - uses: Vampire/setup-wsl@v1
+  - pwsh: |
+      curl.exe -L -o ubuntu-2004.appx https://aka.ms/wslubuntu2004
+      copy-item ubuntu-2004.appx ubuntu.zip
+      expand-archive ubuntu.zip
+      cd ubuntu
+      copy-item Ubuntu_2004.2021.825.0_x64.appx ubuntu.zip
+      expand-archive ubuntu.zip
+      ubuntu\ubuntu.exe install --root
   # the build tools script does need to be run even on the msft hosted machines
   - script: |
-      wsl --install
       C:\\Windows\\System32\\bash.exe -c "sudo apt update -q -y&&sudo apt install -y make"
       call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
       python build.py
