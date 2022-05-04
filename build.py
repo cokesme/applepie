@@ -12,12 +12,10 @@ print("Checking that rustc is present and nightly... ", end='', flush=True)
 assert b"-nightly" in subprocess.check_output(["rustc.exe", "--version"], stderr=subprocess.STDOUT)
 print("ok")
 
-print("Checking for cygwin... ", end='', flush=True)
-assert os.path.exists("C:\\cygwin64\\cygwin.bat")
-print("ok")
 
 # Set up path to include cygwin
-os.environ["PATH"] += os.pathsep + "C:\\cygwin64\\bin"
+os.environ["PATH"] += os.pathsep + "C:\\cygwin64\\bin" + "C:\\msys64\\usr\\bin\\"
+bash = "C:\\msys64\\usr\\bin\\bash.exe"
 
 if len(sys.argv) == 2 and sys.argv[1] == "deepclean":
     # Completely clean box, including cleaning makefiles from autoconf
@@ -29,7 +27,7 @@ if len(sys.argv) == 2 and sys.argv[1] == "deepclean":
 elif len(sys.argv) == 2 and sys.argv[1] == "clean":
     # Clean objects and binaries
     os.chdir("bochs_build")
-    subprocess.check_call(["C:\\cygwin64\\bin\\bash.exe", "-c", "make all-clean"])
+    subprocess.check_call([bash, "-c", "make all-clean"])
     os.chdir("..")
     os.chdir("bochservisor")
     subprocess.check_call(["cargo", "clean"])
@@ -56,7 +54,7 @@ else:
     # than the last configure, reconfigure
     if not os.path.exists("bochs_configured") or os.path.getmtime("bochs_configured") < os.path.getmtime("../bochs_config"):
         # Configure bochs
-        subprocess.check_call(["C:\\cygwin64\\bin\\bash.exe", "../bochs_config"])
+        subprocess.check_call([bash, "../bochs_config"])
 
         # Create a marker indicating that bochs is configured
         with open("bochs_configured", "wb") as fd:
@@ -65,5 +63,5 @@ else:
         print("Skipping configuration as it's already up to date!")
 
     # Build bochs
-    subprocess.check_call(["C:\\cygwin64\\bin\\bash.exe", "-c", "time make -s -j16"])
+    subprocess.check_call([bash, "-c", "time make -s -j16"])
     os.chdir("..")
